@@ -8,16 +8,19 @@ function Cell(i, j, w) {
   this.y = j * w;
   this.w = w;
   this.number = 0;
+
+  this.red = 255;
+  this.green = 255;
+  this.blue = 255;
 }
 
 /** attach function to protoype. Each object has this method now. */
 Cell.prototype.show = function() {
-  colour = 240;
   stroke(0);
   noFill();
   // draw square
   rect(this.x, this.y, this.w, this.w);
-  fill(colour);
+  fill(this.red, this.green, this.blue);
   rect(this.x, this.y, this.w, this.w);
   if (this.number >= 0) {
     textAlign(CENTER);
@@ -32,7 +35,24 @@ Cell.prototype.contains = function(x, y) {
 
 Cell.prototype.update = function(x, y) {
   // change color to yellow briefly
+  this.flashcolor(255, 255, 0);
   return this.number += 1;
-  noFill();
-  fill(255,255,0);
+}
+
+/* flash color of new cell */
+Cell.prototype.flashcolor = function(r, g, b) {
+  var savedRed = this.red;
+  var savedGreen = this.green;
+  var savedBlue = this.blue;
+
+  this.red = r;
+  this.green = g;
+  this.blue = b;
+
+  var cell = this;
+  var animation = setTimeout(function () {
+    cell.red = savedRed;
+    cell.green = savedGreen;
+    cell.blue = savedBlue;
+  }, 50);
 }

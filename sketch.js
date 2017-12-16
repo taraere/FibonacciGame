@@ -38,6 +38,7 @@ function mousePressed() {
       if (grid[i][j].contains(mouseX, mouseY)) {
         // increase value of cell that's clicked on
         if (grid[i][j].number == 0) {
+          // grid[i][j].flashcolor();
           grid[i][j].update();
         } else {
           grid[i][j].update();
