@@ -41,18 +41,18 @@ Cell.prototype.update = function(x, y) {
 
 /* flash color of new cell */
 Cell.prototype.flashcolor = function(r, g, b) {
-  var savedRed = this.red;
-  var savedGreen = this.green;
-  var savedBlue = this.blue;
+  var savedRed    = this.red;
+  var savedGreen  = this.green;
+  var savedBlue   = this.blue;
 
-  this.red = r;
-  this.green = g;
-  this.blue = b;
+  this.red    = r;
+  this.green  = g;
+  this.blue   = b;
 
   var cell = this;
   var animation = setTimeout(function () {
-    cell.red = savedRed;
-    cell.green = savedGreen;
-    cell.blue = savedBlue;
+    cell.red    = savedRed;
+    cell.green  = savedGreen;
+    cell.blue   = savedBlue;
   }, 50);
 }
