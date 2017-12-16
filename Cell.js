@@ -9,23 +9,29 @@ function Cell(i, j, w) {
   this.w = w;
   this.number = 0;
 
-  this.red = 255;
-  this.green = 255;
-  this.blue = 255;
+  this.red = 244;
+  this.green = 244;
+  this.blue = 244;
 }
 
 /** attach function to protoype. Each object has this method now. */
 Cell.prototype.show = function() {
-  stroke(0);
+  stroke(255, 0, 0);
   noFill();
   // draw square
   rect(this.x, this.y, this.w, this.w);
   fill(this.red, this.green, this.blue);
   rect(this.x, this.y, this.w, this.w);
-  if (this.number >= 0) {
+  if (this.number == 0) {
     textAlign(CENTER);
     fill(0);
-    text(this.number, this.x + this.w * 0.5, this.y + this.w - 6);
+    text(this.number, this.x + this.w * 0.5, this.y + this.w * 0.6);
+  }
+  if (this.number > 0) {
+    textAlign(CENTER);
+    fill(0, 100, 150);
+    stroke(0, 100, 150);
+    text(this.number, this.x + this.w * 0.5, this.y + this.w * 0.6);
   }
 }
 /** check if mouse clicked on cell, i.e. point is inside parameters */
@@ -34,8 +40,6 @@ Cell.prototype.contains = function(x, y) {
 }
 
 Cell.prototype.update = function(x, y) {
-  // change color to yellow briefly
-  this.flashcolor(255, 255, 0);
   return this.number += 1;
 }
 

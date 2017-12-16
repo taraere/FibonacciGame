@@ -12,33 +12,36 @@ var grid;
 var cols;
 var rows;
 // number of pixels for each cell.
-var w = 20;
+var squareSide = 30;
+// gameboard 50 x 50.
+var boardSide = 5;
+var sidePixels = squareSide * boardSide + 1;
 
 function setup() {
-  // gameboard
-  createCanvas(1001, 1001);
+  // createCanvas(1001, 1001);
+  createCanvas(sidePixels, sidePixels);
   // floor for rounding to integers
-  cols = floor(width / w);
-  rows = floor(height / w);
+  cols = boardSide;
+  rows = boardSide;
   grid = make2DArray(cols, rows);
 
   for (var i = 0; i < cols; i++) {
     for (var j = 0; j < rows; j++) {
       // initialize every position to become a new cell
-      grid[i][j] = new Cell(i, j, w);
+      grid[i][j] = new Cell(i, j,squareSide);
     }
   }
 
 }
 
-// when click on cell
+// when clicked on cell
 function mousePressed() {
   for (var i = 0; i < cols; i++) {
     for (var j = 0; j < rows; j++) {
       if (grid[i][j].contains(mouseX, mouseY)) {
         // increase value of cell that's clicked on
         if (grid[i][j].number == 0) {
-          // grid[i][j].flashcolor();
+          grid[i][j].flashcolor(255, 255, 0);
           grid[i][j].update();
         } else {
           grid[i][j].update();
