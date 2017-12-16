@@ -51,8 +51,7 @@ function mousePressed() {
   var j = rowIndex(mouseY);
   // increase value of cell that's clicked on
   if (grid[i][j].number == 0) {
-    grid[i][j].flashcolor(255, 255, 0);
-    grid[i][j].update();
+    add(i, j);
   } else {
     crossAdd(i, j);
   }
@@ -68,7 +67,7 @@ function mousePressed() {
   }
 }
 
-/* crossAdd() function: update all on (i , j + something) and (i + something, j) */
+/* crossAdd(i, j) function: update all on (i , j + something) and (i + something, j) */
 function crossAdd(i, j) {
   grid[i][j].flashcolor(0, 255, 0);
   grid[i][j].update();
@@ -88,6 +87,12 @@ function crossAdd(i, j) {
       grid[k][j].update();
     }
   }
+}
+
+/* adds one to a single cell */
+function add(i, j) {
+  grid[i][j].flashcolor(255, 255, 0);
+  grid[i][j].update();
 }
 
 // function checkSequence() {
