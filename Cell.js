@@ -63,6 +63,6 @@ Cell.prototype.flashcolor = function(r, g, b) {
 
 /* toString function */
 Cell.prototype.toString = function() {
-  var str = "(" + this.i + ", " + this.j + ") value: " + this.number;
+  var str = "\n[(" + this.i + ", " + this.j + "), " + this.number + "]\n";
   return str;
 }

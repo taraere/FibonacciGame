@@ -1,13 +1,12 @@
-// Fibonacci game
+// Fibonacci Game
 
-function make2DArray(cols, rows) {
-  var arr = new Array(cols);
+function make2DArray(rows, cols) {
+  var arr = new Array(rows);
   for (var i = 0; i < arr.length; i++) {
-    arr[i] = new Array(rows);
+    arr[i] = new Array(cols);
   }
   return arr;
 }
-
 // visuals
 var grid;
 var cols;
@@ -16,8 +15,8 @@ var rows;
 // number of pixels for each cell.
 var squareSide = 30;
 
-// gameboard 50 x 50 TODO Change back to fifty.
-var boardSide = 5;
+// gameboard 50 x 50.
+var boardSide = 50;
 var sidePixels = squareSide * boardSide + 1;
 
 function setup() {
@@ -36,8 +35,8 @@ function setup() {
 
 /* when cell clicked, updates values and checks for Fibonacci sequence */
 function mousePressed() {
-  var i = colIndex(mouseX);
-  var j = rowIndex(mouseY);
+  var i = rowIndex(mouseX);
+  var j = colIndex(mouseY);
   var cell = grid[i][j];
 
   // increase value of cell that's clicked on
@@ -53,14 +52,9 @@ function mousePressed() {
       aCell = grid[k][l];
       if (aCell.number >= 5) {
         // check if it's a Fibonacci number
-        if (isFibonacci(aCell) != null) {
-          var xn = isFibonacci(aCell);
-          var previousValue = isFibonacci(aCell)[1];
-          findSequence(aCell, xn);
-        }
-        // hardcoded for WIP
-        if (aCell.number == 5) {
-          findSequence(aCell, 5);
+        var prevValue = isFibonacci(aCell)
+        if (prevValue != null) {
+          findSequence(aCell, prevValue);
         }
       }
     }
@@ -68,7 +62,7 @@ function mousePressed() {
 }
 
 /* check for a sequence of five consecutive Fibonacci numbers */
-function findSequence(aCell, pos) {
+function findSequence(aCell, prevValue) {
   // keep track of how often you loop. Limit to 5.
   var count = 0;
   var oldCount = -1;
@@ -76,81 +70,88 @@ function findSequence(aCell, pos) {
   // list of cell indexes to store sequence
   var listCells = [aCell];
 
-  // check nieghours a maximum of five times, sequence length is 5.
-  while (count < 5) {
+  // check nieghours a maximum of five times, 
+  // max 8 neighors for each of the 5 cells in the sequence.
+  while (count < 8*5) {
     if (oldCount == count) {
       break;
-    }
-    oldCount = count;
+    } else {
+      oldCount = count;
+      // check neighbors.
+      var checked = checkNeighbors(listCells, aCell, prevValue, count);
+      if (checked != null) {
+        count = checked[0];
+        aCell = checked[1];
+        prevValue = checked[2];
 
-    // check neighbors.
-    checkNeighbors(listCells, aCell, pos);
-
-    count += 1;
-    console.log("list cells:  " + listCells);
-
-    if (listCells.length == 5) {
-      // then set items in list to zero
-      for (var p = 0; p < listCells.length; p++) {
-        var item = listCells[p];
-        item.flashcolor(255, 0, 0);
-        item.number = 0;
-        break;
+        if (listCells.length >= 5) {
+          console.log("list: " + listCells);
+          
+          // then set items in list to zero
+          for (var p = 0; p < listCells.length; p++) {
+            var item = listCells[p];
+            item.flashcolor(255, 0, 0);
+            item.number = 0;
+          }
+          break;
+        }
       }
     }
   }
 }
 
 /* check the neighbors only */
-function checkNeighbors(listCells, aCell, pos) {
-  console.log("checkNeighbors");
+function checkNeighbors(listCells, aCell, prevValue, count) {
   var k = aCell.i;
   var l = aCell.j;
-  // check neighboring cells
+
+  // search neighboring cells
   for (var m = -1; m <= 1; m ++) {
     var new_k =  k + m;
+
     for (var n = -1; n <= 1; n ++) {
       var new_l = l + n
-      // check outside board or itself
+
+      // is outside board edges?
       if (new_k < 0 || new_k >= rows || new_l < 0 || new_l >= cols) {
         continue;
       }
-      // check if same cell
-      if (n == 0 && m == 0) {
-        continue;
+      // if cell has been visited already?
+      for (var p = 0; p < listCells.length; p ++) {
+        if (m == listCells[p].i && n == listCells[p].j) {
+          continue;
+        }
       }
+      var nextCell = grid[new_k][new_l];
       // if neighbor equals next item in sequence
-      var fibonacciL = fibonacciLower(aCell, pos)
-      if (grid[k + m][l + n].number == fibonacciL) {
+      if (nextCell.number == prevValue) {
         // remember locations
         listCells.push(grid[new_k][new_l]);
         // anchor on that cell
-        aCell = grid[new_k][new_l];
+        if (prevValue != 1) {
+          prevValue = fibonacciLower(aCell, prevValue);
+          count += 1;
+        } 
+        else {
+          count = ( 8 * 5 ) - 1;
+        }
+        aCell = nextCell;
+        // return new list, current cell, and value to search for
+        return [count, aCell, prevValue];
       }
     }
   }
-  return listCells;
+  return null;
 }
 
 /* calculate the next, lower value in sequence of Fibonacci numbers */
-function fibonacciLower(aCell, position) {
+function fibonacciLower(aCell, prevValue) {
   var i = aCell.i;
   var j = aCell.j;
   var currentValue = aCell.number;
   // formula to find lower values
-  var golden = 1.618034;
-  Math.pow(
-    (Math.pow(golden, position)
-    - Math.pow((1 - golden), position)
-     / currentValue), 2);
-  // var nextValue = (Math.pow(golden, position)
-  //                  - Math.pow((1 - golden), position))
-  //                  / Math.pow(aCell.number, 1/2);
-  if (prevValue < 1) {
-    prevValue = -1;
-  }
-  console.log("FibLower previous value " + prevValue.toString());
-  return floor(prevValue);
+  var prevprevValue = currentValue - prevValue;
+  return prevprevValue;
 }
 
 /* Start calculating the sequence. Each new value, check if it's */
@@ -160,18 +161,15 @@ function isFibonacci(aCell) {
   // starting terms
   var seq1 = 1;
   var seq2 = 2;
-  // position
-  var pos = 3;
   while(seq < aCell.number) {
     seq = seq1 + seq2;
-    pos += 1;
     if (seq == aCell.number) {
       var lowerValue = seq2;
-      return [pos, lowerValue];
+      return lowerValue;
     } else {
       // update terms
-      seq2 = seq;
       seq1 = seq2;
+      seq2 = seq;
     }
   }
   return null;
@@ -209,13 +207,13 @@ function crossAdd(cell) {
 }
 
 /** find column index */
-function colIndex(mouseX) {
-  return floor(mouseX / squareSide);
+function colIndex(mouseY) {
+  return floor(mouseY / squareSide);
 }
 
 /** find row index */
-function rowIndex(mouseY) {
-  return floor(mouseY / squareSide);
+function rowIndex(mouseX) {
+  return floor(mouseX / squareSide);
 }
 
 function draw() {
