@@ -15,8 +15,8 @@ var rows;
 // number of pixels for each cell.
 var squareSide = 30;
 
-// gameboard 50 x 50. T0D0 
-var boardSide = 5;
+// gameboard 50 x 50. 
+var boardSide = 50;
 var sidePixels = squareSide * boardSide + 1;
 
 function setup() {
@@ -49,7 +49,7 @@ function mousePressed() {
   if (cell.number == 0) {
     add(cell);
   } else {
-    add(cell);
+    crossAdd(cell);
   }
 
   // check every cell for possible sequences
