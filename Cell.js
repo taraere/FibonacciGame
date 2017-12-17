@@ -55,8 +55,14 @@ Cell.prototype.flashcolor = function(r, g, b) {
 
   var cell = this;
   var animation = setTimeout(function () {
-    cell.red    = savedRed;
-    cell.green  = savedGreen;
-    cell.blue   = savedBlue;
-  }, 50);
+    cell.red    = 255;
+    cell.green  = 255;
+    cell.blue   = 255;
+  }, 500);
+}
+
+/* toString function */
+Cell.prototype.toString = function() {
+  var str = "(" + this.i + ", " + this.j + ") value: " + this.number;
+  return str;
 }
