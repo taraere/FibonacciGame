@@ -44,7 +44,7 @@ Cell.prototype.update = function(x, y) {
 }
 
 /* flash color of new cell */
-Cell.prototype.flashcolor = function(r, g, b) {
+Cell.prototype.flashcolor = function(r, g, b, dur) {
   var savedRed    = this.red;
   var savedGreen  = this.green;
   var savedBlue   = this.blue;
@@ -58,7 +58,7 @@ Cell.prototype.flashcolor = function(r, g, b) {
     cell.red    = 255;
     cell.green  = 255;
     cell.blue   = 255;
-  }, 500);
+  }, dur);
 }
 
 /* toString function */

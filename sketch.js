@@ -15,8 +15,8 @@ var rows;
 // number of pixels for each cell.
 var squareSide = 30;
 
-// gameboard 50 x 50.
-var boardSide = 50;
+// gameboard 50 x 50. T0D0 
+var boardSide = 5;
 var sidePixels = squareSide * boardSide + 1;
 
 function setup() {
@@ -37,13 +37,19 @@ function setup() {
 function mousePressed() {
   var i = rowIndex(mouseX);
   var j = colIndex(mouseY);
+
+  // exception of clicking outside grid.
+  if (i < 0 || i >= rows || j < 0 || j >= cols) {
+    return;
+  }
+
   var cell = grid[i][j];
 
   // increase value of cell that's clicked on
   if (cell.number == 0) {
     add(cell);
   } else {
-    crossAdd(cell);
+    add(cell);
   }
 
   // check every cell for possible sequences
@@ -86,11 +92,15 @@ function findSequence(aCell, prevValue) {
 
         if (listCells.length >= 5) {
           console.log("list: " + listCells);
+          console.log("length: " + listCells.length);
           
           // then set items in list to zero
           for (var p = 0; p < listCells.length; p++) {
             var item = listCells[p];
-            item.flashcolor(255, 0, 0);
+            // red
+            item.flashcolor(227, 38, 54, 50);
+            // item.flashcolor(255, 103, 0, 50);
+            // item.flashcolor(254, 38, 54, 50);
             item.number = 0;
           }
           break;
@@ -116,26 +126,22 @@ function checkNeighbors(listCells, aCell, prevValue, count) {
       if (new_k < 0 || new_k >= rows || new_l < 0 || new_l >= cols) {
         continue;
       }
-      // if cell has been visited already?
-      for (var p = 0; p < listCells.length; p ++) {
-        if (m == listCells[p].i && n == listCells[p].j) {
-          continue;
-        }
-      }
+
       var nextCell = grid[new_k][new_l];
+
+      // has cell been visited already?
+      if (listCells.contains(nextCell)) {
+        continue;
+      }
+
       // if neighbor equals next item in sequence
       if (nextCell.number == prevValue) {
         // remember locations
         listCells.push(grid[new_k][new_l]);
-        // anchor on that cell
-        if (prevValue != 1) {
-          prevValue = fibonacciLower(aCell, prevValue);
-          count += 1;
-        } 
-        else {
-          count = ( 8 * 5 ) - 1;
-        }
+        prevValue = fibonacciLower(aCell, prevValue);
+        // anchor on that new cell
         aCell = nextCell;
+        count += 1;
         // return new list, current cell, and value to search for
         return [count, aCell, prevValue];
       }
@@ -177,7 +183,7 @@ function isFibonacci(aCell) {
 
 /* adds one to a single cell */
 function add(cell) {
-  cell.flashcolor(255, 255, 0);
+  cell.flashcolor(255, 255, 53, 500);
   cell.update();
 }
 
@@ -186,13 +192,14 @@ update all on (i , j + something) and (i + something, j) */
 function crossAdd(cell) {
   var i = cell.i;
   var j = cell.j;
-  cell.flashcolor(0, 255, 0);
+  // light green color
+  cell.flashcolor(144, 238, 144, 5);
   cell.update();
 
   // increase vertical values
   for (var k = 0; k < rows; k++) {
     if (k != j) {
-      grid[i][k].flashcolor(0, 255, 0);
+      grid[i][k].flashcolor(144, 238, 144, 10);
       grid[i][k].update();
     }
   }
@@ -200,10 +207,19 @@ function crossAdd(cell) {
   // increase horizontal values
   for (var k = 0; k < cols; k++) {
     if (k != i) {
-      grid[k][j].flashcolor(0, 255, 0);
+      grid[k][j].flashcolor(144, 238, 144, 10);
       grid[k][j].update();
     }
   }
+}
+
+Array.prototype.contains = function(object) {
+  for (var i = 0; i < this.length; i ++) {
+    if (object == this[i]) {
+      return true;
+    }
+  }
+  return false;
 }
 
 /** find column index */
